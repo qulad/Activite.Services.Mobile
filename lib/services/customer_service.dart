@@ -42,13 +42,13 @@ class CustomerService {
         }));
   }
 
-  Future<google_user_dto> getMe() async {
+  Future<GoogleUserDto> getMe() async {
     const storage = FlutterSecureStorage();
 
     var meFromStorage = await storage.read(key: 'me');
 
     if (meFromStorage != null) {
-      return google_user_dto.fromJson(meFromStorage);
+      return GoogleUserDto.fromJson(meFromStorage);
     }
 
     final token = await storage.read(key: 'jwt');
@@ -65,7 +65,7 @@ class CustomerService {
     );
 
     if (response.statusCode == 200) {
-      var me = google_user_dto.fromJson(response.body);
+      var me = GoogleUserDto.fromJson(response.body);
 
       await storage.write(key: 'me', value: me.toJson().toString());
 

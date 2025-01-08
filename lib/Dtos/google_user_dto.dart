@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class google_user_dto {
+class GoogleUserDto {
   final String id;
   final String email;
   final String phoneNumber;
@@ -16,7 +16,7 @@ class google_user_dto {
   final String dateOfBirth;
   final String googleId;
 
-  google_user_dto({
+  GoogleUserDto({
     required this.id,
     required this.email,
     required this.phoneNumber,
@@ -33,9 +33,9 @@ class google_user_dto {
     required this.googleId
   });
 
-  factory google_user_dto.fromJson(String jsonString) {
+  factory GoogleUserDto.fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString);
-    return google_user_dto(
+    return GoogleUserDto(
       id: json['id'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
