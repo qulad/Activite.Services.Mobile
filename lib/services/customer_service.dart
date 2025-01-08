@@ -9,10 +9,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-class MyApp {
+class customer_service {
   final BuildContext _context;
 
-  MyApp({required BuildContext context}) : _context = context;
+  customer_service({required BuildContext context}) : _context = context;
 
   Future<void> createMe({
     required String firstName,
