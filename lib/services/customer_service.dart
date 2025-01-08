@@ -91,14 +91,15 @@ class customer_service {
 
       final GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
 
-      if (googleAccount == null)
+      if (googleAccount == null) {
         throw Exception('Kullanıcı giriş yapmayı iptal ett');
+      }
 
       final GoogleSignInAuthentication googleAuth =
           await googleAccount.authentication;
       final String accessToken = googleAuth.accessToken!;
 
-      final String googleId = googleAccount.id!;
+      final String googleId = googleAccount.id;
 
       const storage = FlutterSecureStorage();
 
