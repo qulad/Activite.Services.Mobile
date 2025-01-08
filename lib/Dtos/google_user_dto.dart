@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:uuid/uuid.dart';
+
 class GoogleUserDto {
-  final String id;
+  final Uuid id;
   final String email;
   final String phoneNumber;
   final String region;
