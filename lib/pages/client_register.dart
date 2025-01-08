@@ -1,137 +1,201 @@
-import 'package:flutter/gestures.dart';
+import 'package:deneme/Dtos/google_user_dto.dart';
+import 'package:deneme/services/customer_service.dart';
 import 'package:flutter/material.dart';
-import 'package:deneme/google_sign_in.dart';
-import 'package:deneme/services/google_register.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class ClientRegisterPage extends StatelessWidget {
+class ClientRegisterPage extends StatefulWidget {
+  @override
+  _ClientRegisterPageState createState() => _ClientRegisterPageSate();
+}
+
+class _ClientRegisterPageState extends State<ClientRegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+
+// O an kontrol yapabilelim diye
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+
+  String? _selectedDay;
+  String? _selectedMonth;
+  String? _selectedYear;
+  bool _isChecked = false;
+
+// DTO classından nasıl nesne oluşturup kullanmam gerektiğini bilemedim.
+// Şimdilik bunlara atacağım girdileri form validastonu sağlanınca.
+  String? FirstName;
+  String? LastName;
+  String? Email;
+  String? PhoneNumber;
+  bool TermsAndServicesAccepted = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Yarim logo
-            Container(
-              height: MediaQuery.of(context).size.height / 6,
-              child: Image.asset('assets/logo.png'),
-            ),
-            SizedBox(height: 50),
+    final isWideScreen = MediaQuery.of(context).size.width > 800;
 
-            // Google ile Üye Ol butonu
-            Container(
-              width: 245,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () async {
-                  bool isRegistered =
-                      await googleRegister(context); // Kayıt başlatılıyor
-                  if (isRegistered) {
-                    // Kayıt başarılıysa home.dart sayfasına yönlendir
-                    Navigator.pushReplacementNamed(context, '/home');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 2,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Image.asset(
-                        'assets/google_logo.png',
-                        height: 24,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Google ile Üye Ol',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            // Apple ile Üye Ol butonu (şimdilik işlevsiz)
-            Container(
-              width: 245,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Şimdilik işlevsiz
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 2,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Image.asset(
-                        'assets/apple_logo.png',
-                        height: 24,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Apple ile Üye Ol',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            // Zaten hesabın var mı? metni ve Giriş Yap linki
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Align(
-                alignment: Alignment.center,
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Zaten hesabın var mı? ',
-                    style: TextStyle(color: Colors.black, fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: 'Giriş Yap',
-                        style: TextStyle(
-                          color: Color(0xFFD18788),
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            // Giriş Yap'a tıklanınca home.dart'a yönlendir
-                            Navigator.pushReplacementNamed(context, '/home');
-                          },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+    Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Üyelik Oluştur'),
         ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  controller: _firstNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Ad',
+                    hintText: 'Adınızı girin',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Lütfen adınızı girin';
+                    }
+                    return null;
+                  },
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        hint: Text('Gün'),
+                        value: _selectedDay,
+                        items: List.generate(31, (index) {
+                          return DropdownMenuItem<String>(
+                            value: (index + 1).toString(),
+                            child: Text((index + 1).toString()),
+                          );
+                        }),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedDay = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Lütfen günü seçin';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        hint: Text('Ay'),
+                        value: _selectedMonth,
+                        items: List.generate(12, (index) {
+                          return DropdownMenuItem<String>(
+                            value: (index + 1).toString(),
+                            child: Text((index + 1).toString()),
+                          );
+                        }),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedMonth = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Lütfen ayı seçin';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        hint: Text('Yıl'),
+                        value: _selectedYear,
+                        items: List.generate(100, (index) {
+                          int year = DateTime.now().year - index;
+                          return DropdownMenuItem<String>(
+                            value: year.toString(),
+                            child: Text(year.toString()),
+                          );
+                        }),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedYear = value;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Lütfen yılı seçin';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    labelText: 'Telefon Numarası',
+                    hintText: 'Telefon numaranızı girin',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  maxLength: 10,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Lütfen telefon numaranızı giriniz.';
+                    }
+                    if (value.length != 10 || !value.startsWith('5')) {
+                      return 'Telefon numarası eksik veya hatalı.';
+                    }
+                    return null;
+                  },
+                ),
+                CheckboxListTile(
+                  title: Text('KVKK Aydınlatma Metni’ni okudum anladım.'),
+                  value: _isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _isChecked = value!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      if (_isChecked) {
+                        setState(() {
+                          FirstName = _firstNameController.text;
+                          LastName = _lastNameController.text;
+                          Email = _emailController.text;
+                          PhoneNumber = _phoneController.text;
+                          TermsAndServicesAccepted = _isChecked;
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Üyelik başarıyla oluşturuldu')));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'KVKK Aydınlatma Metni onayı gereklidir')));
+                      }
+                    }
+                  },
+                  child: Text('Üyelik Oluştur'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }
