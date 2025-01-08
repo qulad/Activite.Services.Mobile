@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:ffi';
 
+import 'package:deneme/Dtos/base/base_dto.dart';
 import 'package:uuid/uuid.dart';
 
-class EventDto {
+class EventDto extends BaseDto{
   final Uuid id;
   final Uuid locationId;
   final Uuid? ageRestrictionId;
@@ -34,7 +35,8 @@ class EventDto {
     this.updatedAt
   });
 
-  factory EventDto.fromJson(String jsonString) {
+  @override
+  static EventDto fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString);
     return EventDto(
       id: json['id'],
@@ -53,6 +55,7 @@ class EventDto {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id.toString(),

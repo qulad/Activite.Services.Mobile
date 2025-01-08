@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:deneme/Dtos/base/base_dto.dart';
 import 'package:deneme/utils/dateonly.dart';
 import 'package:uuid/uuid.dart';
 
-class GoogleUserDto {
+class GoogleUserDto extends BaseDto {
   final Uuid id;
   final String email;
   final String phoneNumber;
@@ -33,10 +34,11 @@ class GoogleUserDto {
     required this.firstName,
     required this.lastName,
     required this.dateOfBirth,
-    required this.googleId
+    required this.googleId,
   });
 
-  factory GoogleUserDto.fromJson(String jsonString) {
+  @override
+  static GoogleUserDto fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString);
     return GoogleUserDto(
       id: json['id'],
@@ -48,14 +50,15 @@ class GoogleUserDto {
       verified: json['verified'],
       verificationCode: json['verificationCode'],
       createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
       firstName: json['firstName'],
       lastName: json['lastName'],
       dateOfBirth: DateOnly.parse(json['dateOfBirth']),
-      googleId: json['googleId']
+      googleId: json['googleId'],
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id.toString(),
@@ -71,7 +74,7 @@ class GoogleUserDto {
       'firstName': firstName,
       'lastName': lastName,
       'dateOfBirth': dateOfBirth.toString(),
-      'googleId': googleId
+      'googleId': googleId,
     };
   }
 }

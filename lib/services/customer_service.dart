@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:deneme/Dtos/base/base_dto.dart';
+import 'package:deneme/Dtos/base/paged_result.dart';
 import 'package:deneme/Dtos/google_user_dto.dart';
 import 'package:deneme/pages/client_home_page.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,48 @@ class CustomerService {
   final BuildContext _context;
 
   CustomerService({required BuildContext context}) : _context = context;
+
+  Future<PagedResult<T>> getMultipleAsync<T extends BaseDto>(
+      {required String url,
+      Map<String, dynamic>? filters,
+      int? page,
+      int? pageSize,
+      String? orderBy,
+      String? sortOrder}) {
+    final Uri uri = Uri.parse('app.activite.tech/$url');
+
+    const storage = FlutterSecureStorage();
+
+    return http.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'Token-Provider': "Google",
+      'Authorization': 'Bearer ${storage.read(key: 'jwt')}'
+    }).then((response) {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(response.body);
+
+        var items = (json['items'] as List).map((item) => (BaseDto.fromJson(item) as T)).toList();
+
+        return PagedResult<T>(
+          items: items,
+          isEmpty: json['isEmpty'],
+          isNotEmpty: json['isNotEmpty'],
+          currentPage: json['currentPage'],
+          totalPages: json['totalPages'],
+          totalResults: json['totalResults'],
+        );
+        // final Map<String, dynamic> json = jsonDecode(response.body);
+        // var items = json['items'].map((item) => T.fromJson(item)).toList();
+        // var isEmpty = json['isEmpty'];
+        // var isNotEmpty = json['isNotEmpty'];
+        // var currentPage = json['currentPage'];
+        // var totalPages = json['totalPages'];
+        // var totalResults = json['totalResults'];
+      } else {
+        throw Exception('Failed to load data');
+      }
+    });
+  }
 
   Future<void> createMe(
       {required String firstName,
@@ -31,7 +74,7 @@ class CustomerService {
           'Authorization': 'Bearer ${await storage.read(key: 'jwt')}',
         },
         body: jsonEncode({
-          'id': Uuid().v4(),
+          'id': const Uuid().v4(),
           'firstName': firstName,
           'lastName': lastName,
           'email': email,

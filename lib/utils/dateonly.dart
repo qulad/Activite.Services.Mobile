@@ -27,4 +27,9 @@ class DateOnly {
   DateTime toDateTime() {
     return DateTime(year, month, day);
   }
+
+  static DateOnly now() {
+    final now = DateTime.now();
+    return DateOnly(now.year, now.month, now.day);
+  }
 }
