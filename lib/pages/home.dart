@@ -70,37 +70,9 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Align(
-                alignment: Alignment.center,
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Hesabın yok mu? ',
-                    style: const TextStyle(color: Colors.black, fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: 'Üye ol',
-                        style: const TextStyle(
-                          color: Color(0xFFD18788),
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ClientHomePage(),
-                              ),
-                            );
-                          },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30)
             ),
             const SizedBox(height: 20),
           ],
