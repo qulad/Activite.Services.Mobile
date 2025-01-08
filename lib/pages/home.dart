@@ -6,7 +6,7 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Future<void> googleLogin(BuildContext context) async {
-    customer_service customerService = customer_service(context: context);
+    CustomerService customerService = CustomerService(context: context);
 
     await customerService.googleLogin();
 
