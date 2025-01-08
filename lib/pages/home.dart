@@ -1,3 +1,4 @@
+import 'package:deneme/pages/client_register.dart';
 import 'package:deneme/services/customer_service.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,10 @@ class HomePage extends StatelessWidget {
 
       customerService.navigateToClientHomePage();
     } catch (error) {
-      print(error); // create'e ilerle
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ClientRegisterPage()),
+      );
     }
   }
 
@@ -65,9 +69,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30)
-            ),
+            const Padding(padding: EdgeInsets.symmetric(horizontal: 30)),
             const SizedBox(height: 20),
           ],
         ),
