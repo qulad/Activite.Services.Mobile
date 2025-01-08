@@ -2,6 +2,8 @@ import 'package:deneme/services/customer_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   Future<void> googleLogin(BuildContext context) async {
     customer_service customerService = customer_service(context: context);
 
