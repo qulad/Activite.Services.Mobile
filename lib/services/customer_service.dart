@@ -14,36 +14,45 @@ class customer_service {
 
   customer_service({required BuildContext context}) : _context = context;
 
-  Future<void> createMe({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String googleId,
-    required String dateOfBirth,
-    required String phoneNumber
-  }) async {
+  Future<void> createMe(
+      {required String firstName,
+      required String lastName,
+      required String email,
+      required String dateOfBirth,
+      required String phoneNumber}) async {
     final Uri url = Uri.parse('app.activite.tech/users');
 
-    await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Token-Provider': "Google",
-        'Authorization': 'Bearer qdsa',
-      },
-      body: jsonEncode({
-        'id': Uuid().v4(),
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': email,
-        'googleId': googleId,
-        'dateOfBirth': dateOfBirth,
-        'phoneNumber': phoneNumber,
-        'region': 'TR',
-      }));
+    const storage = FlutterSecureStorage();
+
+    await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Token-Provider': "Google",
+          'Authorization': 'Bearer ${await storage.read(key: 'jwt')}',
+        },
+        body: jsonEncode({
+          'id': Uuid().v4(),
+          'firstName': firstName,
+          'lastName': lastName,
+          'email': email,
+          'googleId': await storage.read(key: 'googleId'),
+          'dateOfBirth': dateOfBirth,
+          'phoneNumber': phoneNumber,
+          'region': 'TR',
+        }));
   }
 
-  Future<google_user_dto> getMe(String token) async {
+  Future<google_user_dto> getMe() async {
+    const storage = FlutterSecureStorage();
+
+    var meFromStorage = await storage.read(key: 'me');
+
+    if (meFromStorage != null) {
+      return google_user_dto.fromJson(meFromStorage);
+    }
+
+    final token = await storage.read(key: 'jwt');
+
     final Uri url = Uri.parse('app.activite.tech/users/me');
 
     final response = await http.get(
@@ -56,13 +65,17 @@ class customer_service {
     );
 
     if (response.statusCode == 200) {
-      return google_user_dto.fromJson(response.body);
+      var me = google_user_dto.fromJson(response.body);
+
+      await storage.write(key: 'me', value: me.toJson().toString());
+
+      return me;
     } else {
       throw Exception('Failed to load user');
     }
   }
 
-  void navigateToHomePage() {
+  void navigateToClientHomePage() {
     Navigator.pushAndRemoveUntil(
       _context,
       MaterialPageRoute(builder: (context) => ClientHomePage()),
@@ -78,7 +91,8 @@ class customer_service {
 
       final GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
 
-      if (googleAccount == null) return;
+      if (googleAccount == null)
+        throw Exception('Kullanıcı giriş yapmayı iptal ett');
 
       final GoogleSignInAuthentication googleAuth =
           await googleAccount.authentication;
@@ -90,8 +104,6 @@ class customer_service {
 
       await storage.write(key: 'googleId', value: googleId);
       await storage.write(key: 'jwt', value: accessToken);
-
-      navigateToHomePage();
     } catch (error) {
       dialogAndExit(_context, error.toString());
     }
