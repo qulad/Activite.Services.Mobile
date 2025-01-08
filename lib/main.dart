@@ -9,7 +9,7 @@ import 'package:deneme/pages/user_account_page.dart';
 import 'package:deneme/pages/splash_screen.dart';
 import 'package:deneme/pages/search_page.dart';
 import 'package:deneme/pages/wallet_page.dart';
-import 'package:deneme/pages/comment_history_page.dart'; // SADECE BU IMPORT KALSIN
+import 'package:deneme/pages/comment_history_page.dart';
 import 'package:deneme/pages/user_settings_page.dart';
 import 'package:deneme/pages/recent_purchases_page.dart';
 import 'package:deneme/pages/kvkk_page.dart';

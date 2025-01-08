@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -50,7 +51,6 @@ class ClientHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ekran genişliğine göre responsive ayarları
     final isWideScreen = MediaQuery.of(context).size.width > 800;
 
     String? jwt, googleId = readDataAndCheckNull() as String?;
@@ -61,12 +61,12 @@ class ClientHomePage extends StatelessWidget {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Bir Hata Oluştu"),
-            content: Text("Hata: ${error.toString()}"), // Hata mesajını göster
+            content: Text("Hata:"),
             actions: <Widget>[
               TextButton(
                 child: Text("Tamam"),
                 onPressed: () {
-                  Navigator.of(context).pop(); // Popup'ı kapat
+                  Navigator.of(context).pop();
                   clearAllData();
                   Future.delayed(Duration(milliseconds: 300), () {
                     // Uygulamayı kapat
