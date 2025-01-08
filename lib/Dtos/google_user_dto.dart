@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:deneme/utils/dateonly.dart';
 import 'package:uuid/uuid.dart';
 
 class GoogleUserDto {
@@ -11,11 +12,11 @@ class GoogleUserDto {
   final bool termsAndServicesAccepted;
   final bool verified;
   final String verificationCode;
-  final String createdAt;
-  final String? updatedAt;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
   final String firstName;
   final String lastName;
-  final String dateOfBirth;
+  final DateOnly dateOfBirth;
   final String googleId;
 
   GoogleUserDto({
@@ -46,18 +47,18 @@ class GoogleUserDto {
       termsAndServicesAccepted: json['termsAndServicesAccepted'],
       verified: json['verified'],
       verificationCode: json['verificationCode'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
       firstName: json['firstName'],
       lastName: json['lastName'],
-      dateOfBirth: json['dateOfBirth'],
+      dateOfBirth: DateOnly.parse(json['dateOfBirth']),
       googleId: json['googleId']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': id.toString(),
       'email': email,
       'phoneNumber': phoneNumber,
       'region': region,
@@ -65,11 +66,11 @@ class GoogleUserDto {
       'termsAndServicesAccepted': termsAndServicesAccepted,
       'verified': verified,
       'verificationCode': verificationCode,
-      'createdAt': createdAt.toString(),
-      'updatedAt': updatedAt?.toString(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'firstName': firstName,
       'lastName': lastName,
-      'dateOfBirth': dateOfBirth,
+      'dateOfBirth': dateOfBirth.toString(),
       'googleId': googleId
     };
   }

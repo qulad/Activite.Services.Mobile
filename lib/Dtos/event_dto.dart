@@ -13,14 +13,10 @@ class EventDto {
   final String description;
   final Float amount;
   final String currency;
-  final String dateFrom;
-  final String dateTo;
-  final String createdAt;
-  final String? updatedAt;
-  final String firstName;
-  final String lastName;
-  final String dateOfBirth;
-  final String googleId;
+  final DateTime dateFrom;
+  final DateTime dateTo;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
 
   EventDto({
     required this.id,
@@ -35,11 +31,7 @@ class EventDto {
     required this.dateFrom,
     required this.dateTo,
     required this.createdAt,
-    this.updatedAt,
-    required this.firstName,
-    required this.lastName,
-    required this.dateOfBirth,
-    required this.googleId
+    this.updatedAt
   });
 
   factory EventDto.fromJson(String jsonString) {
@@ -54,36 +46,28 @@ class EventDto {
       description: json['description'],
       amount: json['amount'],
       currency: json['currency'],
-      dateFrom: json['dateFrom'],
-      dateTo: json['dateTo'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      dateOfBirth: json['dateOfBirth'],
-      googleId: json['googleId']
+      dateFrom: DateTime.parse(json['dateFrom']),
+      dateTo: DateTime.parse(json['dateTo']),
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt'])
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'locationId': locationId,
-      'ageRestrictionId': ageRestrictionId,
-      'offerId': offerId,
+      'id': id.toString(),
+      'locationId': locationId.toString(),
+      'ageRestrictionId': ageRestrictionId?.toString(),
+      'offerId': offerId.toString(),
       'visualMediaIds': [visualMediaIds.map((id) => id.toString()).join(',')],
       'name': name,
       'description': description,
       'amount': amount,
       'currency': currency,
-      'dateFrom': dateFrom,
-      'dateTo': dateTo,
-      'createdAt': createdAt.toString(),
-      'updatedAt': updatedAt?.toString(),
-      'firstName': firstName,
-      'lastName': lastName,
-      'dateOfBirth': dateOfBirth,
-      'googleId': googleId
+      'dateFrom': dateFrom.toIso8601String(),
+      'dateTo': dateTo.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String()
     };
   }
 }
