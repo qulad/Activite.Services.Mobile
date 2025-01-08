@@ -1,13 +1,5 @@
 import 'package:deneme/services/customer_service.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-import 'package:deneme/pages/client_home_page.dart';
-import 'package:deneme/services/auth_provider.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter/services.dart'; // Uygulama kapatma için gerekli
 
 class HomePage extends StatelessWidget {
   Future<void> googleLogin(BuildContext context) async {
