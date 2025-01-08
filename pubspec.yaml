@@ -1,0 +1,67 @@
+name: deneme
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_sign_in: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  intl: ^0.20.1
+  url_launcher: ^6.3.1
+  provider: ^6.1.2
+  flutter_secure_storage: ^9.2.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/full_logo.png
+    - assets/google_logo.png
+    - assets/logo.png
+    - assets/apple_logo.png
+    - assets/logo_round.png
+    - assets/logo_tabbar_mini.png
+    - assets/reading.png
+    - assets/beer.png
+    - assets/dancing.png
+    - assets/die.png
+    - assets/microphone.png
+    - assets/theater_curtain.png
+    - assets/playing_cards.png
+    - assets/muffin.png
+    - assets/target.png
+    - assets/page_with_logo.png
+    - assets/bg.png
+    - assets/event_coffee_day.png
+    - assets/lock.png
+    - assets/info.png
+    - assets/edit.png
+    - assets/location.png
+    - assets/phone.png
+    - assets/mail.png
+    - assets/sign_out.png
+    - assets/event_1.png
+    - assets/event_2.png
+    - assets/event_3.png
+    - assets/event_4.png
+    - assets/event_5.png
+    - assets/event_6.png
+    - assets/event_7.png
+    - assets/event_8.png
+    - assets/event_9.png
+    - assets/event_10.png
+    - assets/event_b_1.png
+    - assets/event_b_2.png
+    - assets/event_b_3.png
+    - assets/event_b_4.png
+    - assets/event_b_5.png
+    - assets/event_b_6.png
+    - assets/event_b_7.png
