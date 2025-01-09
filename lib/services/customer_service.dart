@@ -34,7 +34,9 @@ class CustomerService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
 
-        var items = (json['items'] as List).map((item) => (BaseDto.fromJson(item) as T)).toList();
+        var items = (json['items'] as List)
+            .map((item) => (BaseDto.fromJson(item) as T))
+            .toList();
 
         return PagedResult<T>(
           items: items,
@@ -143,6 +145,8 @@ class CustomerService {
       final String accessToken = googleAuth.accessToken!;
 
       final String googleId = googleAccount.id;
+
+      final String email = googleAccount.email;
 
       const storage = FlutterSecureStorage();
 

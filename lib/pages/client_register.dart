@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class ClientRegisterPage extends StatefulWidget {
   @override
-  _ClientRegisterPageState createState() => _ClientRegisterPageSate();
+  _ClientRegisterPageState createState() => _ClientRegisterPageState();
 }
 
 class _ClientRegisterPageState extends State<ClientRegisterPage> {
@@ -35,167 +35,163 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isWideScreen = MediaQuery.of(context).size.width > 800;
-
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Üyelik Oluştur'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Ad',
-                    hintText: 'Adınızı girin',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Lütfen adınızı girin';
-                    }
-                    return null;
-                  },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Üyelik Oluştur'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  labelText: 'Ad',
+                  hintText: 'Adınızı girin',
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        hint: Text('Gün'),
-                        value: _selectedDay,
-                        items: List.generate(31, (index) {
-                          return DropdownMenuItem<String>(
-                            value: (index + 1).toString(),
-                            child: Text((index + 1).toString()),
-                          );
-                        }),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedDay = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Lütfen günü seçin';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        hint: Text('Ay'),
-                        value: _selectedMonth,
-                        items: List.generate(12, (index) {
-                          return DropdownMenuItem<String>(
-                            value: (index + 1).toString(),
-                            child: Text((index + 1).toString()),
-                          );
-                        }),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedMonth = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Lütfen ayı seçin';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        hint: Text('Yıl'),
-                        value: _selectedYear,
-                        items: List.generate(100, (index) {
-                          int year = DateTime.now().year - index;
-                          return DropdownMenuItem<String>(
-                            value: year.toString(),
-                            child: Text(year.toString()),
-                          );
-                        }),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedYear = value;
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Lütfen yılı seçin';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: InputDecoration(
-                    labelText: 'Telefon Numarası',
-                    hintText: 'Telefon numaranızı girin',
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  maxLength: 10,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Lütfen telefon numaranızı giriniz.';
-                    }
-                    if (value.length != 10 || !value.startsWith('5')) {
-                      return 'Telefon numarası eksik veya hatalı.';
-                    }
-                    return null;
-                  },
-                ),
-                CheckboxListTile(
-                  title: Text('KVKK Aydınlatma Metni’ni okudum anladım.'),
-                  value: _isChecked,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isChecked = value!;
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      if (_isChecked) {
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Lütfen adınızı girin';
+                  }
+                  return null;
+                },
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      hint: Text('Gün'),
+                      value: _selectedDay,
+                      items: List.generate(31, (index) {
+                        return DropdownMenuItem<String>(
+                          value: (index + 1).toString(),
+                          child: Text((index + 1).toString()),
+                        );
+                      }),
+                      onChanged: (value) {
                         setState(() {
-                          FirstName = _firstNameController.text;
-                          LastName = _lastNameController.text;
-                          Email = _emailController.text;
-                          PhoneNumber = _phoneController.text;
-                          TermsAndServicesAccepted = _isChecked;
+                          _selectedDay = value;
                         });
-
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Üyelik başarıyla oluşturuldu')));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                'KVKK Aydınlatma Metni onayı gereklidir')));
-                      }
-                    }
-                  },
-                  child: Text('Üyelik Oluştur'),
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Lütfen günü seçin';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      hint: Text('Ay'),
+                      value: _selectedMonth,
+                      items: List.generate(12, (index) {
+                        return DropdownMenuItem<String>(
+                          value: (index + 1).toString(),
+                          child: Text((index + 1).toString()),
+                        );
+                      }),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMonth = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Lütfen ayı seçin';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      hint: Text('Yıl'),
+                      value: _selectedYear,
+                      items: List.generate(100, (index) {
+                        int year = DateTime.now().year - index;
+                        return DropdownMenuItem<String>(
+                          value: year.toString(),
+                          child: Text(year.toString()),
+                        );
+                      }),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedYear = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Lütfen yılı seçin';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              TextFormField(
+                controller: _phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Telefon Numarası',
+                  hintText: 'Telefon numaranızı girin',
                 ),
-              ],
-            ),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                maxLength: 10,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Lütfen telefon numaranızı giriniz.';
+                  }
+                  if (value.length != 10 || !value.startsWith('5')) {
+                    return 'Telefon numarası eksik veya hatalı.';
+                  }
+                  return null;
+                },
+              ),
+              CheckboxListTile(
+                title: Text('KVKK Aydınlatma Metni’ni okudum anladım.'),
+                value: _isChecked,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _isChecked = value!;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    if (_isChecked) {
+                      setState(() {
+                        FirstName = _firstNameController.text;
+                        LastName = _lastNameController.text;
+                        Email = _emailController.text;
+                        PhoneNumber = _phoneController.text;
+                        TermsAndServicesAccepted = _isChecked;
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Üyelik başarıyla oluşturuldu')));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content:
+                              Text('KVKK Aydınlatma Metni onayı gereklidir')));
+                    }
+                  }
+                },
+                child: Text('Üyelik Oluştur'),
+              ),
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 }
