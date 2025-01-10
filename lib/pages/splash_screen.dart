@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:deneme/services/customer_service.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,10 +18,25 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _timer = Timer(Duration(seconds: 3), () {
+    _timer = Timer(Duration(seconds: 3), () async {
       setState(() {
         _opacity = 0.0;
       });
+
+      const storage = FlutterSecureStorage();
+
+      String? email = await storage.read(key: 'email');
+
+      if (email == "glemsomhet@gmail.com") {
+        CustomerService customerService = CustomerService();
+
+        customerService.getMe();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
 
       Future.delayed(Duration(milliseconds: 500), () {
         Navigator.pushReplacement(
