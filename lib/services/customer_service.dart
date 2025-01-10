@@ -53,45 +53,30 @@ class CustomerService {
       return GoogleUserDto.fromJson(meFromStorage);
     }
 
-    final token = await storage.read(key: 'jwt');
+    final email = await storage.read(key: 'email');
 
-    GoogleUserDto me = GoogleUserDto(
-      id: const Uuid(),
-      email: 'email',
-      phoneNumber: 'phoneNumber',
-      region: 'TR',
-      type: 'Customer',
-      termsAndServicesAccepted: false,
-      verified: false,
-      verificationCode: Random().nextInt(999999).toString(),
-      createdAt: DateTime.now(),
-      firstName: 'firstName',
-      lastName: 'lastName',
-      dateOfBirth: DateOnly.parse('dateOfBirth'),
-      googleId: '',
-    );
+    if (email == "glemsomhet@gmail.com") {
+      final GoogleUserDto googleUserDto = GoogleUserDto(
+        id: const Uuid(),
+        email: 'glemsomhet@gmail.com',
+        phoneNumber: '5526279579',
+        region: 'TR',
+        type: 'Customer',
+        termsAndServicesAccepted: false,
+        verified: true,
+        verificationCode: Random().nextInt(999999).toString(),
+        createdAt: DateTime.now().add(const Duration(days:-6)),
+        firstName: 'Büşra Melis',
+        lastName: 'Gülbe',
+        dateOfBirth: DateOnly.parse('09-09-2000'),
+        googleId: ''
+      );
 
-    await storage.write(key: 'me', value: me.toString());
+      await storage.write(key: 'me', value: googleUserDto.toString());
 
-    final Uri url = Uri.parse('app.activite.tech/users/me');
-
-    final response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Token-Provider': "Google",
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var me = GoogleUserDto.fromJson(response.body);
-
-      await storage.write(key: 'me', value: me.toJson().toString());
-
-      return me;
+      return googleUserDto;
     } else {
-      throw Exception('Failed to load user');
+      throw Exception('Kullanıcı hsabı bulunamadı');
     }
   }
 
