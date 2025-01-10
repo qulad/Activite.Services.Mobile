@@ -11,15 +11,9 @@ class CustomTabBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              icon: Icon(Icons.search, size: 24, color: Colors.white),
+              icon: Icon(Icons.card_giftcard, size: 24, color: Colors.white),
               onPressed: () {
-                Navigator.pushNamed(context, '/search_page');
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.wallet, size: 24, color: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, '/wallet_page');
+                Navigator.pushNamed(context, '/rezervations_page');
               },
             ),
             GestureDetector(
@@ -42,12 +36,6 @@ class CustomTabBar extends StatelessWidget {
               icon: Icon(Icons.person, size: 24, color: Colors.white),
               onPressed: () {
                 Navigator.pushNamed(context, '/user_account_page');
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.card_giftcard, size: 24, color: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, '/coupon_page');
               },
             ),
           ],

@@ -16,6 +16,7 @@ import 'package:deneme/pages/kvkk_page.dart';
 import 'package:deneme/pages/feedback_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:deneme/pages/rezervations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/recent_purchases_page': (context) => RezervationsPage(),
         '/kvkk_page': (context) => KvkkPage(),
         '/feedback_page': (context) => FeedbackPage(),
+        '/rezervations_page': (context) => RezervationsPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Etkinlikçe',
