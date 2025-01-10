@@ -6,14 +6,18 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Future<void> googleLogin(BuildContext context) async {
-    CustomerService customerService = CustomerService(context: context);
+    CustomerService customerService = CustomerService();
 
-    await customerService.googleLogin();
+    try {
+      await customerService.googleLogin(context);
+    } catch (error) {
+      customerService.dialogAndExit(context, "Google servislerine erişim sağlanamadı");
+    }
 
     try {
       await customerService.getMe();
 
-      customerService.navigateToClientHomePage();
+      customerService.navigateToClientHomePage(context);
     } catch (error) {
       Navigator.push(
         context,

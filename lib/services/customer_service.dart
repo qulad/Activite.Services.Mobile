@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'package:deneme/Dtos/base/base_dto.dart';
-import 'package:deneme/Dtos/base/paged_result.dart';
+import 'dart:math';
 import 'package:deneme/Dtos/google_user_dto.dart';
 import 'package:deneme/pages/client_home_page.dart';
+import 'package:deneme/utils/dateonly.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,53 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class CustomerService {
-  final BuildContext _context;
-
-  CustomerService({required BuildContext context}) : _context = context;
-
-  Future<PagedResult<T>> getMultipleAsync<T extends BaseDto>(
-      {required String url,
-      Map<String, dynamic>? filters,
-      int? page,
-      int? pageSize,
-      String? orderBy,
-      String? sortOrder}) {
-    final Uri uri = Uri.parse('app.activite.tech/$url');
-
-    const storage = FlutterSecureStorage();
-
-    return http.get(uri, headers: {
-      'Content-Type': 'application/json',
-      'Token-Provider': "Google",
-      'Authorization': 'Bearer ${storage.read(key: 'jwt')}'
-    }).then((response) {
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> json = jsonDecode(response.body);
-
-        var items = (json['items'] as List)
-            .map((item) => (BaseDto.fromJson(item) as T))
-            .toList();
-
-        return PagedResult<T>(
-          items: items,
-          isEmpty: json['isEmpty'],
-          isNotEmpty: json['isNotEmpty'],
-          currentPage: json['currentPage'],
-          totalPages: json['totalPages'],
-          totalResults: json['totalResults'],
-        );
-        // final Map<String, dynamic> json = jsonDecode(response.body);
-        // var items = json['items'].map((item) => T.fromJson(item)).toList();
-        // var isEmpty = json['isEmpty'];
-        // var isNotEmpty = json['isNotEmpty'];
-        // var currentPage = json['currentPage'];
-        // var totalPages = json['totalPages'];
-        // var totalResults = json['totalResults'];
-      } else {
-        throw Exception('Failed to load data');
-      }
-    });
-  }
 
   Future<void> createMe(
       {required String firstName,
@@ -65,26 +17,31 @@ class CustomerService {
       required String email,
       required String dateOfBirth,
       required String phoneNumber}) async {
-    final Uri url = Uri.parse('app.activite.tech/users');
 
     const storage = FlutterSecureStorage();
 
-    await http.post(url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Token-Provider': "Google",
-          'Authorization': 'Bearer ${await storage.read(key: 'jwt')}',
-        },
-        body: jsonEncode({
-          'id': const Uuid().v4(),
-          'firstName': firstName,
-          'lastName': lastName,
-          'email': email,
-          'googleId': await storage.read(key: 'googleId'),
-          'dateOfBirth': dateOfBirth,
-          'phoneNumber': phoneNumber,
-          'region': 'TR',
-        }));
+      storage.write(key: 'me.firstName', value: firstName);
+      storage.write(key: 'me.lastName', value: lastName);
+      storage.write(key: 'me.email', value: email);
+      storage.write(key: 'me.dateOfBirth', value: dateOfBirth);
+      storage.write(key: 'me.phoneNumber', value: phoneNumber);
+      storage.write(key: 'me.region', value: 'TR');
+
+      await storage.write(key: 'me', value: {
+        'id': const Uuid().v4(),
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'region': 'TR',
+        'type': 'Customer',
+        'termsAndServicesAccepted': false,
+        'verified': false,
+        'verificationCode': Random().nextInt(999999).toString(),
+        'createdAt': DateTime.now().toIso8601String(),
+        'firstName': firstName,
+        'lastName': lastName,
+        'dateOfBirth': dateOfBirth,
+        'googleId': await storage.read(key: 'googleId'),
+      }.toString());
   }
 
   Future<GoogleUserDto> getMe() async {
@@ -97,6 +54,24 @@ class CustomerService {
     }
 
     final token = await storage.read(key: 'jwt');
+
+    GoogleUserDto me = GoogleUserDto(
+      id: const Uuid(),
+      email: 'email',
+      phoneNumber: 'phoneNumber',
+      region: 'TR',
+      type: 'Customer',
+      termsAndServicesAccepted: false,
+      verified: false,
+      verificationCode: Random().nextInt(999999).toString(),
+      createdAt: DateTime.now(),
+      firstName: 'firstName',
+      lastName: 'lastName',
+      dateOfBirth: DateOnly.parse('dateOfBirth'),
+      googleId: '',
+    );
+
+    await storage.write(key: 'me', value: me.toString());
 
     final Uri url = Uri.parse('app.activite.tech/users/me');
 
@@ -120,15 +95,15 @@ class CustomerService {
     }
   }
 
-  void navigateToClientHomePage() {
+  void navigateToClientHomePage(BuildContext context) {
     Navigator.pushAndRemoveUntil(
-      _context,
+      context,
       MaterialPageRoute(builder: (context) => ClientHomePage()),
       (Route<dynamic> route) => false,
     );
   }
 
-  Future<void> googleLogin() async {
+  Future<void> googleLogin(BuildContext context) async {
     try {
       GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email'],
@@ -152,8 +127,9 @@ class CustomerService {
 
       await storage.write(key: 'googleId', value: googleId);
       await storage.write(key: 'jwt', value: accessToken);
+      await storage.write(key: 'email', value: email);
     } catch (error) {
-      dialogAndExit(_context, error.toString());
+      dialogAndExit(context, error.toString());
     }
   }
 

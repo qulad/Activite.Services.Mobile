@@ -1,10 +1,7 @@
-import 'package:deneme/Dtos/google_user_dto.dart';
 import 'package:deneme/services/customer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class ClientRegisterPage extends StatefulWidget {
   @override
@@ -18,7 +15,6 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
 
   String? _selectedDay;
   String? _selectedMonth;
@@ -29,7 +25,6 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
 // Şimdilik bunlara atacağım girdileri form validastonu sağlanınca.
   String? FirstName;
   String? LastName;
-  String? Email;
   String? PhoneNumber;
   bool TermsAndServicesAccepted = false;
 
@@ -58,6 +53,19 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
                   return null;
                 },
               ),
+              TextFormField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  labelText: 'Soy Ad',
+                  hintText: 'Soy adınızı girin',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Lütfen soy adınızı girin';
+                  }
+                  return null;
+                },
+              ),
               Row(
                 children: [
                   Expanded(
@@ -66,7 +74,7 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
                       value: _selectedDay,
                       items: List.generate(31, (index) {
                         return DropdownMenuItem<String>(
-                          value: (index + 1).toString(),
+                          value: (index + 1) < 10 ? '0${index + 1}' : (index + 1).toString(),
                           child: Text((index + 1).toString()),
                         );
                       }),
@@ -90,7 +98,7 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
                       value: _selectedMonth,
                       items: List.generate(12, (index) {
                         return DropdownMenuItem<String>(
-                          value: (index + 1).toString(),
+                          value: (index + 1) < 10 ? '0${index + 1}' : (index + 1).toString(),
                           child: Text((index + 1).toString()),
                         );
                       }),
@@ -166,16 +174,32 @@ class _ClientRegisterPageState extends State<ClientRegisterPage> {
                 controlAffinity: ListTileControlAffinity.leading,
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
                     if (_isChecked) {
                       setState(() {
                         FirstName = _firstNameController.text;
                         LastName = _lastNameController.text;
-                        Email = _emailController.text;
                         PhoneNumber = _phoneController.text;
                         TermsAndServicesAccepted = _isChecked;
                       });
+
+                      const storage = FlutterSecureStorage();
+
+                      final String? email = await storage.read(key: 'email');
+
+                      if (email == null) {
+                        throw Exception('Email bilgisi alınamadı');
+                      }
+
+                      CustomerService customerService = CustomerService();
+
+                      await customerService.createMe(
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                        email: email,
+                        dateOfBirth: '$_selectedMonth-$_selectedDay-$_selectedYear',
+                        phoneNumber: _phoneController.text);
 
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Üyelik başarıyla oluşturuldu')));
