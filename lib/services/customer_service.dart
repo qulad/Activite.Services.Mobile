@@ -10,67 +10,60 @@ import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
 class CustomerService {
-
   Future<void> createMe(
       {required String firstName,
       required String lastName,
       required String email,
       required String dateOfBirth,
       required String phoneNumber}) async {
-
     const storage = FlutterSecureStorage();
 
-      storage.write(key: 'me.firstName', value: firstName);
-      storage.write(key: 'me.lastName', value: lastName);
-      storage.write(key: 'me.email', value: email);
-      storage.write(key: 'me.dateOfBirth', value: dateOfBirth);
-      storage.write(key: 'me.phoneNumber', value: phoneNumber);
-      storage.write(key: 'me.region', value: 'TR');
+    storage.write(key: 'me.firstName', value: firstName);
+    storage.write(key: 'me.lastName', value: lastName);
+    storage.write(key: 'me.email', value: email);
+    storage.write(key: 'me.dateOfBirth', value: dateOfBirth);
+    storage.write(key: 'me.phoneNumber', value: phoneNumber);
+    storage.write(key: 'me.region', value: 'TR');
 
-      await storage.write(key: 'me', value: {
-        'id': const Uuid().v4(),
-        'email': email,
-        'phoneNumber': phoneNumber,
-        'region': 'TR',
-        'type': 'Customer',
-        'termsAndServicesAccepted': false,
-        'verified': false,
-        'verificationCode': Random().nextInt(999999).toString(),
-        'createdAt': DateTime.now().toIso8601String(),
-        'firstName': firstName,
-        'lastName': lastName,
-        'dateOfBirth': dateOfBirth,
-        'googleId': await storage.read(key: 'googleId'),
-      }.toString());
+    await storage.write(
+        key: 'me',
+        value: {
+          'id': const Uuid().v4(),
+          'email': email,
+          'phoneNumber': phoneNumber,
+          'region': 'TR',
+          'type': 'Customer',
+          'termsAndServicesAccepted': false,
+          'verified': false,
+          'verificationCode': Random().nextInt(999999).toString(),
+          'createdAt': DateTime.now().toIso8601String(),
+          'firstName': firstName,
+          'lastName': lastName,
+          'dateOfBirth': dateOfBirth,
+          'googleId': await storage.read(key: 'googleId'),
+        }.toString());
   }
 
   Future<GoogleUserDto> getMe() async {
     const storage = FlutterSecureStorage();
 
-    var meFromStorage = await storage.read(key: 'me');
-
-    if (meFromStorage != null) {
-      return GoogleUserDto.fromJson(meFromStorage);
-    }
-
     final email = await storage.read(key: 'email');
 
     if (email == "glemsomhet@gmail.com") {
       final GoogleUserDto googleUserDto = GoogleUserDto(
-        id: const Uuid(),
-        email: 'glemsomhet@gmail.com',
-        phoneNumber: '5526279579',
-        region: 'TR',
-        type: 'Customer',
-        termsAndServicesAccepted: false,
-        verified: true,
-        verificationCode: Random().nextInt(999999).toString(),
-        createdAt: DateTime.now().add(const Duration(days:-6)),
-        firstName: 'Büşra Melis',
-        lastName: 'Gülbe',
-        dateOfBirth: DateOnly.parse('09-09-2000'),
-        googleId: ''
-      );
+          id: const Uuid(),
+          email: 'glemsomhet@gmail.com',
+          phoneNumber: '5526279579',
+          region: 'TR',
+          type: 'Customer',
+          termsAndServicesAccepted: false,
+          verified: true,
+          verificationCode: Random().nextInt(999999).toString(),
+          createdAt: DateTime.now().add(const Duration(days: -6)),
+          firstName: 'Büşra Melis',
+          lastName: 'Gülbe',
+          dateOfBirth: DateOnly.parse('09-09-2000'),
+          googleId: '');
 
       await storage.write(key: 'me', value: googleUserDto.toString());
 
