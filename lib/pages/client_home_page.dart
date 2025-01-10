@@ -53,35 +53,6 @@ class ClientHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isWideScreen = MediaQuery.of(context).size.width > 800;
 
-    String? jwt, googleId = readDataAndCheckNull() as String?;
-
-    if (jwt == null) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Bir Hata Oluştu"),
-            content: Text("Hata:"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("Tamam"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  clearAllData();
-                  Future.delayed(Duration(milliseconds: 300), () {
-                    // Uygulamayı kapat
-                    SystemNavigator.pop();
-                  });
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    dynamic me = fetchDataWithToken(jwt!);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
