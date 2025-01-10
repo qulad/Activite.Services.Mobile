@@ -11,7 +11,7 @@ import 'package:deneme/pages/search_page.dart';
 import 'package:deneme/pages/wallet_page.dart';
 import 'package:deneme/pages/comment_history_page.dart';
 import 'package:deneme/pages/user_settings_page.dart';
-import 'package:deneme/pages/recent_purchases_page.dart';
+import 'package:deneme/pages/rezervations.dart';
 import 'package:deneme/pages/kvkk_page.dart';
 import 'package:deneme/pages/feedback_page.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         '/event_page': (context) => EventPage(),
         '/comment_history_page': (context) => CommentHistoryPage(),
         '/user_settings_page': (context) => UserSettingsPage(),
-        '/recent_purchases_page': (context) => RecentPurchasesPage(),
+        '/recent_purchases_page': (context) => RezervationsPage(),
         '/kvkk_page': (context) => KvkkPage(),
         '/feedback_page': (context) => FeedbackPage(),
       },

@@ -4,7 +4,7 @@ import 'dart:ffi';
 import 'package:deneme/Dtos/base/base_dto.dart';
 import 'package:uuid/uuid.dart';
 
-class EventDto extends BaseDto{
+class EventDto extends BaseDto {
   final Uuid id;
   final Uuid locationId;
   final Uuid? ageRestrictionId;
@@ -12,47 +12,46 @@ class EventDto extends BaseDto{
   final List<Uuid> visualMediaIds;
   final String name;
   final String description;
-  final Float amount;
+  final double amount;
   final String currency;
   final DateTime dateFrom;
   final DateTime dateTo;
   final DateTime createdAt;
   final DateTime? updatedAt;
 
-  EventDto({
-    required this.id,
-    required this.locationId,
-    this.ageRestrictionId,
-    required this.offerId,
-    required this.visualMediaIds,
-    required this.name,
-    required this.description,
-    required this.amount,
-    required this.currency,
-    required this.dateFrom,
-    required this.dateTo,
-    required this.createdAt,
-    this.updatedAt
-  });
+  EventDto(
+      {required this.id,
+      required this.locationId,
+      this.ageRestrictionId,
+      required this.offerId,
+      required this.visualMediaIds,
+      required this.name,
+      required this.description,
+      required this.amount,
+      required this.currency,
+      required this.dateFrom,
+      required this.dateTo,
+      required this.createdAt,
+      this.updatedAt});
 
   @override
   static EventDto fromJson(String jsonString) {
     final Map<String, dynamic> json = jsonDecode(jsonString);
     return EventDto(
-      id: json['id'],
-      locationId: json['locationId'],
-      ageRestrictionId: json['ageRestrictionId'],
-      offerId: json['offerId'],
-      visualMediaIds: json['visualMediaIds'].map((id) => Uuid.parse(id)).toList(),
-      name: json['name'],
-      description: json['description'],
-      amount: json['amount'],
-      currency: json['currency'],
-      dateFrom: DateTime.parse(json['dateFrom']),
-      dateTo: DateTime.parse(json['dateTo']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt'])
-    );
+        id: json['id'],
+        locationId: json['locationId'],
+        ageRestrictionId: json['ageRestrictionId'],
+        offerId: json['offerId'],
+        visualMediaIds:
+            json['visualMediaIds'].map((id) => Uuid.parse(id)).toList(),
+        name: json['name'],
+        description: json['description'],
+        amount: json['amount'],
+        currency: json['currency'],
+        dateFrom: DateTime.parse(json['dateFrom']),
+        dateTo: DateTime.parse(json['dateTo']),
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']));
   }
 
   @override

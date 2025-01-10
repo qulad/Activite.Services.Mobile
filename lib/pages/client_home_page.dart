@@ -109,6 +109,32 @@ class ClientHomePage extends StatelessWidget {
                 ),
               ),
 
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: "Aramak istediğiniz içeriği yazınız",
+                          hintStyle: TextStyle(color: Colors.grey[600]),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                        onChanged: (value) {},
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.search, color: Colors.black),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
               // Öne Çıkan Görseller Çerçevesi
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 16),

@@ -11,7 +11,6 @@ class ClientRegisterPage extends StatefulWidget {
 class _ClientRegisterPageState extends State<ClientRegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
-// O an kontrol yapabilelim diye
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();

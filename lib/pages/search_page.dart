@@ -24,7 +24,6 @@ class SearchPage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Arama Çubuğu
             Container(
               decoration: BoxDecoration(
                 color: Colors.grey[300],
@@ -41,16 +40,12 @@ class SearchPage extends StatelessWidget {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(horizontal: 16),
                       ),
-                      onChanged: (value) {
-                        // Kullanıcı girdisi ile sıralama ve filtreleme işlemleri
-                      },
+                      onChanged: (value) {},
                     ),
                   ),
                   IconButton(
                     icon: Icon(Icons.search, color: Colors.black),
-                    onPressed: () {
-                      // Arama butonuna basıldığında sıralama ve filtreleme işlemleri
-                    },
+                    onPressed: () {},
                   ),
                 ],
               ),
